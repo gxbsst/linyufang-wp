@@ -1353,8 +1353,6 @@ function wp_playlist_shortcode( $attr ) {
 		echo (int) $theme_width;
 	?>"<?php if ( 'video' === $safe_type ):
 		echo ' height="', (int) $theme_height, '"';
-	else:
-		echo ' style="visibility: hidden"';
 	endif; ?>></<?php echo $safe_type ?>>
 	<div class="wp-playlist-next"></div>
 	<div class="wp-playlist-prev"></div>
@@ -1557,7 +1555,7 @@ function wp_audio_shortcode( $attr, $content = '' ) {
 		'loop'     => $loop,
 		'autoplay' => $autoplay,
 		'preload'  => $preload,
-		'style'    => 'width: 100%; visibility: hidden;',
+		'style'    => 'width: 100%',
 	);
 
 	// These ones should just be omitted altogether if they are blank
@@ -2656,7 +2654,7 @@ function wp_enqueue_media( $args = array() ) {
 	if ( did_action( 'wp_enqueue_media' ) )
 		return;
 
-	global $content_width, $wpdb;
+	global $content_width;
 
 	$defaults = array(
 		'post' => null,
@@ -2695,20 +2693,15 @@ function wp_enqueue_media( $args = array() ) {
 		}
 	}
 
-	$has_audio = $wpdb->get_var( "
-		SELECT ID
-		FROM $wpdb->posts
-		WHERE post_type = 'attachment'
-		AND post_mime_type LIKE 'audio%'
-		LIMIT 1
-	" );
-	$has_video = $wpdb->get_var( "
-		SELECT ID
-		FROM $wpdb->posts
-		WHERE post_type = 'attachment'
-		AND post_mime_type LIKE 'video%'
-		LIMIT 1
-	" );
+	$audio = $video = 0;
+	$counts = (array) wp_count_attachments();
+	foreach ( $counts as $mime => $total ) {
+		if ( 0 === strpos( $mime, 'audio/' ) ) {
+			$audio += (int) $total;
+		} elseif ( 0 === strpos( $mime, 'video/' ) ) {
+			$video += (int) $total;
+		}
+	}
 
 	$settings = array(
 		'tabs'      => $tabs,
@@ -2724,8 +2717,8 @@ function wp_enqueue_media( $args = array() ) {
 		),
 		'defaultProps' => $props,
 		'attachmentCounts' => array(
-			'audio' => (int) $has_audio,
-			'video' => (int) $has_video,
+			'audio' => $audio,
+			'video' => $video
 		),
 		'embedExts'    => $exts,
 		'embedMimes'   => $ext_mimes,
@@ -2836,7 +2829,7 @@ function wp_enqueue_media( $args = array() ) {
 		'videoReplaceTitle'     => __( 'Replace Video' ),
 		'videoAddSourceTitle'   => __( 'Add Video Source' ),
 		'videoDetailsCancel'    => __( 'Cancel Edit' ),
-		'videoSelectPosterImageTitle' => __( 'Select Poster Image' ),
+		'videoSelectPosterImageTitle' => _( 'Select Poster Image' ),
 		'videoAddTrackTitle'	=> __( 'Add Subtitles' ),
 
  		// Playlist

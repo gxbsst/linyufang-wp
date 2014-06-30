@@ -162,13 +162,11 @@
 		 *
 		 *  Examples: modal closes, shortcode properties are removed, etc.
 		 */
-		unsetPlayers : function() {
-			if ( this.players && this.players.length ) {
+		unsetPlayer : function() {
+			if ( this.player ) {
 				wp.media.mixin.pauseAllPlayers();
-				_.each( this.players, function (player) {
-					wp.media.mixin.removePlayer( player );
-				} );
-				this.players = [];
+				wp.media.mixin.removePlayer( this.player );
+				this.player = false;
 			}
 		}
 	};
@@ -707,10 +705,10 @@
 	media.view.MediaDetails = media.view.Settings.AttachmentDisplay.extend({
 		initialize: function() {
 			_.bindAll(this, 'success');
-			this.players = [];
-			this.listenTo( this.controller, 'close', media.mixin.unsetPlayers );
+
+			this.listenTo( this.controller, 'close', media.mixin.unsetPlayer );
 			this.on( 'ready', this.setPlayer );
-			this.on( 'media:setting:remove', media.mixin.unsetPlayers, this );
+			this.on( 'media:setting:remove', media.mixin.unsetPlayer, this );
 			this.on( 'media:setting:remove', this.render );
 			this.on( 'media:setting:remove', this.setPlayer );
 			this.events = _.extend( this.events, {
@@ -766,8 +764,8 @@
 		 * @global MediaElementPlayer
 		 */
 		setPlayer : function() {
-			if ( ! this.players.length && this.media ) {
-				this.players.push( new MediaElementPlayer( this.media, this.settings ) );
+			if ( ! this.player && this.media ) {
+				this.player = new MediaElementPlayer( this.media, this.settings );
 			}
 		},
 

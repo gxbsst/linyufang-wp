@@ -7,7 +7,6 @@
 		initialize : function (options) {
 			this.index = 0;
 			this.settings = {};
-			this.compatMode = $( 'body' ).hasClass( 'wp-admin' ) && $( '#content_ifr' ).length;
 			this.data = options.metadata || $.parseJSON( this.$('script').html() );
 			this.playerNode = this.$( this.data.type );
 
@@ -27,9 +26,7 @@
 				this.renderTracks();
 			}
 
-			if ( this.isCompatibleSrc() ) {
-				this.playerNode.attr( 'src', this.current.get( 'src' ) );
-			}
+			this.playerNode.attr( 'src', this.current.get( 'src' ) );
 
 			_.bindAll( this, 'bindPlayer', 'bindResetPlayer', 'setPlayer', 'ended', 'clickTrack' );
 
@@ -41,64 +38,40 @@
 		},
 
 		bindPlayer : function (mejs) {
-			this.mejs = mejs;
-			this.mejs.addEventListener( 'ended', this.ended );
+			this.player = mejs;
+			this.player.addEventListener( 'ended', this.ended );
 		},
 
 		bindResetPlayer : function (mejs) {
 			this.bindPlayer( mejs );
-			if ( this.isCompatibleSrc() ) {
-				this.playCurrentSrc();
-			}
+			this.playCurrentSrc();
 		},
 
-		isCompatibleSrc: function () {
-			var testNode;
-
-			if ( this.compatMode ) {
-				testNode = $( '<span><source type="' + this.current.get( 'type' ) + '" /></span>' );
-
-				if ( ! wp.media.mixin.isCompatible( testNode ) ) {
-					this.playerNode.removeAttr( 'src' );
-					this.playerNode.removeAttr( 'poster' );
-					return;
-				}
-			}
-
-			return true;
-		},
-
-		setPlayer: function (force) {
-			if ( this.player ) {
-				this.player.pause();
-				this.player.remove();
+		setPlayer: function () {
+			if ( this._player ) {
+				this._player.pause();
+				this._player.remove();
 				this.playerNode = this.$( this.data.type );
-			}
-
-			if (force) {
-				if ( this.isCompatibleSrc() ) {
-					this.playerNode.attr( 'src', this.current.get( 'src' ) );
-				}
+				this.playerNode.attr( 'src', this.current.get( 'src' ) );
 				this.settings.success = this.bindResetPlayer;
 			}
-
 			/**
 			 * This is also our bridge to the outside world
 			 */
-			this.player = new MediaElementPlayer( this.playerNode.get(0), this.settings );
+			this._player = new MediaElementPlayer( this.playerNode.get(0), this.settings );
 		},
 
 		playCurrentSrc : function () {
 			this.renderCurrent();
-			this.mejs.setSrc( this.playerNode.attr( 'src' ) );
-			this.mejs.load();
-			this.mejs.play();
+			this.player.setSrc( this.playerNode.attr( 'src' ) );
+			this.player.load();
+			this.player.play();
 		},
 
 		renderCurrent : function () {
-			var dimensions, defaultImage = 'wp-includes/images/media/video.png';
+			var dimensions;
 			if ( 'video' === this.data.type ) {
-				if ( this.data.images && this.current.get( 'image' ) && -1 === this.current.get( 'image' ).src.indexOf( defaultImage ) ) {
+				if ( this.data.images && this.current.get( 'image' ) ) {
 					this.playerNode.attr( 'poster', this.current.get( 'image' ).src );
 				}
 				dimensions = this.current.get( 'dimensions' ).resized;
@@ -161,14 +134,14 @@
 		},
 
 		loadCurrent : function () {
-			var last = this.playerNode.attr( 'src' ) && this.playerNode.attr( 'src' ).split('.').pop(),
+			var last = this.playerNode.attr( 'src' ).split('.').pop(),
 				current = this.current.get( 'src' ).split('.').pop();
 
-			this.mejs && this.mejs.pause();
+			this.player.pause();
 
 			if ( last !== current ) {
-				this.setPlayer( true );
-			} else if ( this.isCompatibleSrc() ) {
+				this.setPlayer();
+			} else {
 				this.playerNode.attr( 'src', this.current.get( 'src' ) );
 				this.playCurrentSrc();
 			}

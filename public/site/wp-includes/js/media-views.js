@@ -2175,7 +2175,7 @@
 					library:        options.selection,
 					editing:        options.editing,
 					menu:           'video-playlist',
-					dragInfoText:   l10n.videoPlaylistDragInfo,
+					dragInfoText:   l10n.playlistDragInfo,
 					dragInfo:       false
 				}),
 
@@ -3270,7 +3270,6 @@
 		localDrag: false,
 		overContainer: false,
 		overDropzone: false,
-		draggingFile: null,
 
 		initialize: function() {
 			var self = this;
@@ -3310,21 +3309,6 @@
 			return supports;
 		},
 
-		isDraggingFile: function( event ) {
-			if ( this.draggingFile !== null ) {
-				return this.draggingFile;
-			}
-
-			if ( _.isUndefined( event.originalEvent ) || _.isUndefined( event.originalEvent.dataTransfer ) ) {
-				return false;
-			}
-
-			this.draggingFile = _.indexOf( event.originalEvent.dataTransfer.types, 'Files' ) > -1 &&
-				_.indexOf( event.originalEvent.dataTransfer.types, 'text/plain' ) === -1;
-
-			return this.draggingFile;
-		},
-
 		refresh: function( e ) {
 			var dropzone_id;
 			for ( dropzone_id in this.dropzones ) {
@@ -3334,10 +3318,6 @@
 
 			if ( ! _.isUndefined( e ) ) {
 				$( e.target ).closest( '.uploader-editor' ).toggleClass( 'droppable', this.overDropzone );
-			}
-
-			if ( ! this.overContainer && ! this.overDropzone ) {
-				this.draggingFile = null;
 			}
 
 			return this;
@@ -3403,8 +3383,8 @@
 			return this;
 		},
 
-		containerDragover: function( event ) {
-			if ( this.localDrag || ! this.isDraggingFile( event ) ) {
+		containerDragover: function() {
+			if ( this.localDrag ) {
 				return;
 			}
 
@@ -3419,13 +3399,13 @@
 			_.delay( _.bind( this.refresh, this ), 50 );
 		},
 
-		dropzoneDragover: function( event ) {
-			if ( this.localDrag || ! this.isDraggingFile( event ) ) {
+		dropzoneDragover: function( e ) {
+			if ( this.localDrag ) {
 				return;
 			}
 
 			this.overDropzone = true;
-			this.refresh( event );
+			this.refresh( e );
 			return false;
 		},
 
