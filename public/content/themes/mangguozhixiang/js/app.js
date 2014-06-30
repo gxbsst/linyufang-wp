@@ -10,3 +10,5 @@
     //  format: 'yyyy-mm-dd'
     // });
 })(jQuery);
+
+var APP = angular.module('mgApp', ['ngResource', 'ngRoute']);
