@@ -1,0 +1,134 @@
+/*TYPOGRAPHY
+========================== */
+
+a{
+	color: #27ae60;
+
+}
+
+.title a{
+	color: white;
+}
+
+.title a:hover{
+	color: #ccc;
+}
+
+/*HOMEPAGE FEATURED BANNER */
+
+.featured{
+	background: #27ae60;
+	padding: 125px 0;
+	border: none;
+
+}
+
+
+.featured a{
+	color: #fff;
+	text-align: center;
+	display: block;
+}
+
+.featured h1{
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+.featured h2{
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+
+
+.featured p {
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+/*HOMEPAGE FEATURED BANNER END */
+
+/*ABOUT US FEATURED BANNER */
+.featured-about{
+	background: #f39c12;
+	padding: 125px 0;
+	border: none;
+}
+
+.featured-about a{
+	color: #fff;
+	text-align: center;
+	display: block;
+}
+
+.featured-about h1{
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+.featured-about h2{
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+
+
+.featured-about p {
+	color: white;
+	display: block;
+	text-align: center;
+}
+
+/*ABOUT US FEATURED BANNER END */
+
+.dropshadow {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.35);
+    -webkit-box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.35);
+}
+
+.main{
+	display: block;
+    margin: 30px auto;
+    font-size: 12em;
+    color: #fff;
+    box-shadow: 1px #ccc;
+    text-align: center;
+}
+
+.highlight{
+	padding:20px 20px;
+	background:#34495e;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+
+/*NAVBAR
+========================== */
+nav.tab-bar{
+	background:	#34495e;
+}
+
+/*FOOTER
+========================== */
+footer{
+	background:	#34495e;
+	padding-top:60px;
+	text-align: center;
+	color: white;
+}
+
+.copyright{
+	background:#ecf0f1;
+
+}
+
+

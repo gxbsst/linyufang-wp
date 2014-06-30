@@ -1,5 +1,5 @@
 <?php
-define('DB_NAME', 'wordpress_template');
+define('DB_NAME', 'lyf');
 
 /** MySQL database username */
 define('DB_USER', 'root');

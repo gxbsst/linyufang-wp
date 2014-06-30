@@ -1,1 +1,0 @@
-<?php echo stripslashes(get_option('h_adtc')); ?>

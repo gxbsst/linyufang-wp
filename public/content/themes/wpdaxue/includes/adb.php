@@ -1,1 +1,0 @@
-<div id="adb"><?php echo stripslashes(get_option('h_adbc')); ?></div>
