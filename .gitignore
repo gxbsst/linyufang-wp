@@ -2,3 +2,4 @@ public/content/uploads/*
 vendor
 log/*
 .idea
+*.swp
