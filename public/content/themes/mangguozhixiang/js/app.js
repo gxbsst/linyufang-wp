@@ -7,78 +7,138 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-
-    // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: "/tab",
-      abstract: true,
-      templateUrl: "templates/tabs.html"
+    .run(function ($ionicPlatform) {
+        $ionicPlatform.ready(function () {
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            }
+            if (window.StatusBar) {
+                // org.apache.cordova.statusbar required
+                StatusBar.styleDefault();
+            }
+        });
     })
 
-    // Each tab has its own nav history stack:
+    .config(function ($stateProvider, $urlRouterProvider) {
 
-    .state('tab.dash', {
-      url: '/dash',
-      views: {
-        'tab-dash': {
-          templateUrl: 'templates/tab-dash.html',
-          controller: 'DashCtrl'
-        }
-      }
-    })
+        // Ionic uses AngularUI Router which uses the concept of states
+        // Learn more here: https://github.com/angular-ui/ui-router
+        // Set up the various states which the app can be in.
+        // Each state's controller can be found in controllers.js
+        $stateProvider
 
-    .state('tab.friends', {
-      url: '/friends',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      }
-    })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
-        }
-      }
-    })
+            // setup an abstract state for the tabs directive
+            .state('tab', {
+                url: "/tab",
+                abstract: true,
+                templateUrl: "templates/tabs.html"
+            })
 
-    .state('tab.account', {
-      url: '/account',
-      views: {
-        'tab-account': {
-          templateUrl: 'templates/tab-account.html',
-          controller: 'AccountCtrl'
-        }
-      }
-    })
+            // Each tab has its own nav history stack:
+            .state('tab.home', {
+                url: '/home',
+                views: {
+                    'tab-home': {
+                        templateUrl: 'templates/tab-home.html',
+                        controller: 'HomeCtrl'
+                    }
+                }
+            })
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+            .state('tab.dash', {
+                url: '/dash',
+                views: {
+                    'tab-dash': {
+                        templateUrl: 'templates/tab-dash.html',
+                        controller: 'DashCtrl'
+                    }
+                }
+            })
 
-});
+            .state('tab.friends', {
+                url: '/friends',
+                views: {
+                    'tab-friends': {
+                        templateUrl: 'templates/tab-friends.html',
+                        controller: 'FriendsCtrl'
+                    }
+                }
+            })
+
+            .state('tab.friend-detail', {
+                url: '/friend/:friendId',
+                views: {
+                    'tab-friends': {
+                        templateUrl: 'templates/friend-detail.html',
+                        controller: 'FriendDetailCtrl'
+                    }
+                }
+            })
+
+            .state('tab.account', {
+                url: '/account',
+                views: {
+                    'tab-account': {
+                        templateUrl: 'templates/tab-account.html',
+                        controller: 'AccountCtrl'
+                    }
+                }
+            })
+
+            .state('tab.products-show', {
+                url: '/products/:id',
+                views: {
+                    'tab-home': {
+                        templateUrl: 'templates/tab-products-show.html',
+                        controller: 'ProductsShowCtrl'
+                    }
+                }
+            })
+
+            .state('tab.photos', {
+                url: '/photos',
+                views: {
+                    'tab-photo': {
+                        templateUrl: 'templates/tab-photos.html',
+                        controller: 'PhotosCtrl'
+                    }
+                }
+            })
+
+            .state('tab.photos-show', {
+                url: '/photos/:id',
+                views: {
+                    'tab-photos': {
+                        templateUrl: 'templates/tab-photos-show.html',
+                        controller: 'PhotosShowCtrl'
+                    }
+                }
+            })
+
+            .state('tab.orders', {
+                url: '/orders',
+                views: {
+                    'tab-orders': {
+                        templateUrl: 'templates/tab-orders.html',
+                        controller: 'OrdersCtrl'
+                    }
+                }
+            })
+
+            .state('tab.orders-show', {
+                url: '/orders/:id',
+                views: {
+                    'tab-orders': {
+                        templateUrl: 'templates/tab-orders-show.html',
+                        controller: 'OrderShowCtrl'
+                    }
+                }
+            })
+
+        // if none of the above states are matched, use this as the fallback
+        $urlRouterProvider.otherwise('/tab/home');
+
+    });
 

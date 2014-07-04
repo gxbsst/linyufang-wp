@@ -7,15 +7,22 @@
 
 
   <!-- Pets Tab -->
-  <ion-tab title="Dashboard" icon="icon ion-home" href="#/tab/dash">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
+  <ion-tab badge="1" badge-style="badge-assertive" title="首页" icon="icon ion-home" href="#/tab/home">
+    <ion-nav-view name="tab-home" animation="slide-left-right"></ion-nav-view>
   </ion-tab>
 
+    <ion-tab title="图片" icon="icon ion-images" href="#/tab/photos">
+        <ion-nav-view name="tab-photo"></ion-nav-view>
+    </ion-tab>
+
+    <ion-tab title="订单" icon="icon ion-navicon-round" href="#/tab/orders">
+        <ion-nav-view name="tab-orders" ></ion-nav-view>
+    </ion-tab>
 
   <!-- Adopt Tab -->
-  <ion-tab title="Friends" icon="icon ion-heart" href="#/tab/friends">
-    <ion-nav-view name="tab-friends"></ion-nav-view>
-  </ion-tab>
+  <!--<ion-tab title="Friends" icon="icon ion-heart" href="#/tab/friends">-->
+    <!--<ion-nav-view name="tab-friends"></ion-nav-view>-->
+  <!--</ion-tab>-->
 
 
   <!-- About Tab -->
