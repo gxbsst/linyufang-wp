@@ -12,9 +12,11 @@ if (!is_admin()) add_action('wp_enqueue_scripts', 'mg_styles');
 function mg_scripts()
 {
     wp_enqueue_script('inoic', get_template_directory_uri() . '/lib/ionic/js/ionic.bundle.js', '', '', true);
+    wp_enqueue_script('ngResource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
     wp_enqueue_script('app', get_template_directory_uri() . '/js/app.js', '', '', true);
-    wp_enqueue_script('controllers', get_template_directory_uri() . '/js/controllers.js', '', '', true);
     wp_enqueue_script('services', get_template_directory_uri() . '/js/services.js', '', '', true);
+    wp_enqueue_script('posts', get_template_directory_uri() . '/js/services/posts.js', '', '', true);
+    wp_enqueue_script('controllers', get_template_directory_uri() . '/js/controllers.js', '', '', true);
     #wp_enqueue_script('angular', get_template_directory_uri() . '/js/angular.js', '', '', true);
     #wp_enqueue_script('angular-resource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
     #wp_enqueue_script('angular-touch', get_template_directory_uri() . '/js/angular-touch.js', '', '', true);
@@ -26,3 +28,5 @@ function mg_scripts()
 }
 
 if (!is_admin()) add_action('wp_enqueue_scripts', 'mg_scripts');
+
+add_theme_support('post-thumbnails');

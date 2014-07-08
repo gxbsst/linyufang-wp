@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -19,6 +19,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 StatusBar.styleDefault();
             }
         });
+    })
+
+    .value({
+        Actions: {
+            post: {method: 'POST'},
+            add: {method: 'POST'},
+            put: {method: 'PUT'},
+            update: {method: 'PUT'},
+            remove: {method: 'DELETE'}
+        }
     })
 
     .config(function ($stateProvider, $urlRouterProvider) {
@@ -43,6 +53,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     'tab-home': {
                         templateUrl: 'templates/tab-home.html',
                         controller: 'HomeCtrl'
+                    }
+                }
+            })
+
+
+            .state('tab.products', {
+                url: '/products',
+                views: {
+                    'tab-products': {
+                        templateUrl: 'templates/tab-products.html',
+                        controller: 'ProductsCtrl'
+                    }
+                }
+            })
+
+            .state('tab.products-show', {
+                url: '/products/:id',
+                views: {
+                    'tab-products': {
+                        templateUrl: 'templates/tab-products-show.html',
+                        controller: 'ProductsShowCtrl'
                     }
                 }
             })
@@ -87,20 +118,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 }
             })
 
-            .state('tab.products-show', {
-                url: '/products/:id',
-                views: {
-                    'tab-home': {
-                        templateUrl: 'templates/tab-products-show.html',
-                        controller: 'ProductsShowCtrl'
-                    }
-                }
-            })
-
             .state('tab.photos', {
                 url: '/photos',
                 views: {
-                    'tab-photo': {
+                    'tab-photos': {
                         templateUrl: 'templates/tab-photos.html',
                         controller: 'PhotosCtrl'
                     }
@@ -132,13 +153,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 views: {
                     'tab-orders': {
                         templateUrl: 'templates/tab-orders-show.html',
-                        controller: 'OrderShowCtrl'
+                        controller: 'OrdersShowCtrl'
                     }
                 }
             })
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/tab/home');
+        $urlRouterProvider.otherwise('/tab/products');
 
     });
 
