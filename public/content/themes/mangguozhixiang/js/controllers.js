@@ -2,11 +2,15 @@ angular.module('starter.controllers', [])
     .controller('HomeCtrl', function ($scope, Posts) {
     })
 
-    .controller('ProductsCtrl', function ($scope, Posts) {
+    .controller('ProductsCtrl', function ($scope, Posts, User) {
         $scope.reload = function() {
             Posts.query(function(posts){
                 $scope.posts = posts;
                 console.log($scope.posts[0]);
+            });
+            User.get({id: 'me'},function(user){
+                $scope.user = user;
+                console.log($scope.user);
             });
         };
 
@@ -38,8 +42,6 @@ angular.module('starter.controllers', [])
                     $scope.photos2.push($scope.photos.splice(0, 2))
                 }
             });
-
-
         };
 
         $scope.reload();
@@ -62,9 +64,17 @@ angular.module('starter.controllers', [])
 
     .controller('PhotosShowCtrl', function ($scope) {
 
+
     })
 
-    .controller('OrdersCtrl', function ($scope) {
+    .controller('OrdersCtrl', function ($scope, $ionicModal) {
+        $ionicModal.fromTemplateUrl('/templates/login_modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+        });
 
     })
 

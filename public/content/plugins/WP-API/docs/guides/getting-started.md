@@ -1,4 +1,4 @@
-Getting Started
+# Getting Started
 ===============
 
 Hi! If you're reading this, you're probably wondering how to get started using

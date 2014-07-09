@@ -31,7 +31,16 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
         }
     })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+
+        $httpProvider.defaults.headers.common['X-WP-Nonce'] = WP_API_Settings.nonce;
+
+        jQuery.ajaxSetup({
+            global: true,
+            headers: {
+                'X-WP-Nonce':  WP_API_Settings.nonce
+            }
+        });
 
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router

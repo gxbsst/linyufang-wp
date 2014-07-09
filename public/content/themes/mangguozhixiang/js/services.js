@@ -30,5 +30,8 @@ angular.module('starter.services', ['ngResource'])
     .service('Media', function ($resource, Actions) {
         return $resource('/?json_route=/media/:id', {id: '@id'}, Actions);
     })
+    .service('User', function ($resource, Actions) {
+        return $resource('/?json_route=/users/:id', {id: '@id'}, Actions);
+    })
 ;
 ;

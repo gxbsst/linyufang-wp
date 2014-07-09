@@ -11,10 +11,11 @@ if (!is_admin()) add_action('wp_enqueue_scripts', 'mg_styles');
 
 function mg_scripts()
 {
-    wp_enqueue_script('inoic', get_template_directory_uri() . '/lib/ionic/js/ionic.bundle.js', '', '', true);
+    wp_enqueue_script('inoic', get_template_directory_uri() . '/lib/ionic/js/ionic.bundle.js', array('jquery'), '', true);
     wp_enqueue_script('ngResource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
     wp_enqueue_script('app', get_template_directory_uri() . '/js/app.js', '', '', true);
     wp_enqueue_script('services', get_template_directory_uri() . '/js/services.js', '', '', true);
+    wp_enqueue_script('directive', get_template_directory_uri() . '/js/directives/ajax_form.js', array('jquery'), '', true);
     wp_enqueue_script('controllers', get_template_directory_uri() . '/js/controllers.js', '', '', true);
     #wp_enqueue_script('angular', get_template_directory_uri() . '/js/angular.js', '', '', true);
     #wp_enqueue_script('angular-resource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
@@ -24,6 +25,10 @@ function mg_scripts()
     #wp_enqueue_script('app', get_template_directory_uri() . '/js/config.js.coffee', '', '', true);
     #wp_enqueue_script('rootController', get_template_directory_uri() . '/js/controllers/root_controller.js.coffee', '', '', true);
     #wp_enqueue_script('mainController', get_template_directory_uri() . '/js/controllers/main_controller.js.coffee', '', '', true);
+
+  $nonce = wp_create_nonce( 'wp_json' );
+  wp_localize_script( 'wp-api', 'WP_API_Settings', array( 'root' => esc_url_raw( get_json_url() ), 'nonce' => $nonce) );
+  wp_enqueue_script( 'wp-api' );
 }
 
 if (!is_admin()) add_action('wp_enqueue_scripts', 'mg_scripts');
@@ -31,4 +36,34 @@ if (!is_admin()) add_action('wp_enqueue_scripts', 'mg_scripts');
 add_theme_support('post-thumbnails');
 
 add_filter('show_admin_bar', '__return_false');
+
+
+
+function ajax_login(){
+
+  // First check the nonce, if it fails the function will break
+  //  check_ajax_referer( 'ajax-login-nonce', 'security' );
+
+  $nonce = getallheaders()['X-WP-Nonce'];
+  if(wp_verify_nonce($nonce, 'wp_json') != 1)
+    exit('Sorry!');
+
+  // Nonce is checked, get the POST data and sign user on
+  $info = [];
+  $info['user_login'] = $_POST['username'];
+  $info['user_password'] = $_POST['password'];
+  $info['remember'] = true;
+
+  $user_signon = wp_signon( $info, false );
+  if ( is_wp_error($user_signon) ){
+    echo json_encode(array('loggedin'=>false, 'message'=>__('Wrong username or password.')));
+  } else {
+    echo json_encode(array('loggedin'=>true, 'message'=>__('Login successful, redirecting...')));
+  }
+
+  die();
+}
+
+add_action( 'wp_ajax_nopriv_ajaxlogin', 'ajax_login' );
+
 

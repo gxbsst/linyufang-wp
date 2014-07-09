@@ -1,0 +1,26 @@
+<div class="modal">
+    <ion-header-bar>
+        <h1 class="title">LOGIN</h1>
+        <button  ng-click="closeModal()" class="button"><i class="icon ion-chevron-down"></i></button>
+    </ion-header-bar>
+    <ion-content>
+        <img ng-src="{{photo.source}}">
+
+        <form ajax-form ng-action="/site/wp-admin/admin-ajax.php?action=ajaxlogin" name="loginForm" method="post">
+            <div class="list">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Email</span>
+                    <input name="username" type="text" placeholder="Email">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Password</span>
+                    <input type="password" name="password" placeholder="Password">
+                </label>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-positive activated">Create Account</button>
+            </div>
+        </form>
+
+    </ion-content>
+</div>
