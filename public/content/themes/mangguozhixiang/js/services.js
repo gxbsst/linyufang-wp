@@ -27,4 +27,8 @@ angular.module('starter.services', ['ngResource'])
     .service('Posts', function ($resource, Actions) {
         return $resource('/?json_route=/posts/:id', {id: '@id'}, Actions);
     })
+    .service('Media', function ($resource, Actions) {
+        return $resource('/?json_route=/media/:id', {id: '@id'}, Actions);
+    })
+;
 ;

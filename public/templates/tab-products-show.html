@@ -1,6 +1,15 @@
 <ion-view title="{{post.title}}">
     <ion-content class="has-header" padding="true">
-        <img ng-src="{{post.featured_image.attachment_meta.sizes.medium.url}}" alt=""/>
+
+
+        <div class="item item-body">
+
+            <a href="#/tab/products/{{post.ID}}" >
+                <img class="full-image" ng-src={{post.featured_image.guid}}>
+            </a>
+            <div ng-bind-html="post.content"></div>
+        </div>
+
     </ion-content>
 </ion-view>
 

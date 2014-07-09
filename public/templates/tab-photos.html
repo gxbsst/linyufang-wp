@@ -1,6 +1,23 @@
-<ion-view title="图片展示">
+<script id="my-modal.html" type="text/ng-template">
+    <div class="modal">
+        <ion-header-bar>
+            <h1 class="title">{{photo.title}} </h1>
+            <button  ng-click="closeModal()" class="button"><i class="icon ion-chevron-down"></i></button>
+        </ion-header-bar>
+        <ion-content>
+            <img ng-src="{{photo.source}}">
+
+        </ion-content>
+    </div>
+</script>
+
+<ion-view title="图片展示" >
     <ion-content class="has-header has-badge has-footer padding">
-        111
+        <div class="row" ng-repeat="photos1 in photos2">
+            <div  class="col col-50" ng-repeat="photo in photos1">
+                <img ng-click="openModal(photo)" ng-src="{{photo.attachment_meta.sizes.thumbnail.url}}">
+            </div>
+        </div>
     </ion-content>
 
 </ion-view>

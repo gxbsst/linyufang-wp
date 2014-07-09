@@ -2,9 +2,9 @@
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar-stable nav-title-slide-ios7">
+    <ion-nav-bar class="bar-stable nav-title-slide-ios7 bar-assertive">
       <ion-nav-back-button class="button-icon icon  ion-ios7-arrow-back">
-        Back
+        后退
       </ion-nav-back-button>
     </ion-nav-bar>
     <!--

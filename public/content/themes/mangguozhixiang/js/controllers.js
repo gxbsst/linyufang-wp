@@ -24,7 +24,39 @@ angular.module('starter.controllers', [])
 
     })
 
-    .controller('PhotosCtrl', function ($scope) {
+    .controller('PhotosCtrl', function ($scope, $ionicModal, Media) {
+
+        $scope.photos2 = [];
+
+        $scope.reload = function() {
+            Media.query(function(photos){
+                $scope.photos = photos;
+
+                console.log($scope.photos[0]);
+
+                while ($scope.photos.length) {
+                    $scope.photos2.push($scope.photos.splice(0, 2))
+                }
+            });
+
+
+        };
+
+        $scope.reload();
+
+        $ionicModal.fromTemplateUrl('my-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+        });
+        $scope.openModal = function(photo) {
+            $scope.photo = photo;
+            $scope.modal.show();
+        };
+        $scope.closeModal = function() {
+            $scope.modal.hide();
+        };
 
     })
 
