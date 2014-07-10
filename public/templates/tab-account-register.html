@@ -1,0 +1,25 @@
+<ion-view title="注册">
+    <ion-content>
+        <form id="registration" ng-action="registration" method="post" ng-submit="register(user)">
+
+            <div class="list">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">用户名</span>
+                    <input name="username" type="text" ng-model="user.username" placeholder="用户名" required>
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">邮箱</span>
+                    <input name="username" type="text" ng-model="user.email" placeholder="邮箱" required>
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">密码</span>
+                    <input type="password" name="password" ng-model="user.password" placeholder="密码" required>
+                </label>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-positive activated">注册</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>
+

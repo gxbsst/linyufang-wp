@@ -94,4 +94,41 @@ angular.module('starter.controllers', [])
     })
 
     .controller('AccountCtrl', function ($scope) {
-    });
+    })
+
+    .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth) {
+      $scope.login = function(user, loginForm){
+              Auth.login({
+                      username: user.username,
+                      password: user.password
+                  },
+                  function(res) {
+                      console.log('sucess', res);
+                      $location.path('/');
+                  },
+                  function(err) {
+                      console.log('err', err);
+                      $rootScope.error = "Failed to login";
+                  });
+          };
+          return false;
+    })
+    .controller('RegisterCtrl', function ($scope, $location, $rootScope, Auth) {
+        $scope.register = function(user){
+                Auth.register({
+                        username: user.username,
+                        email: user.email,
+                        password: user.password
+                    },
+                    function(res) {
+                          console.log(res);
+//                        $location.path('/');
+                    },
+                    function(err) {
+                        console.log(err);
+                        $rootScope.error = "Failed to register";
+                    });
+            return false;
+        }
+    })
+;
