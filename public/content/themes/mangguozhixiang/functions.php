@@ -55,18 +55,17 @@ function ajax_login()
   $info['user_login'] = $_POST['username'];
   $info['user_password'] = $_POST['password'];
   $info['remember'] = true;
-
   $user_signon = wp_signon($info, false);
   if ( is_wp_error($user_signon) ) {
     echo json_encode(array('loggedin' => false, 'message' => __('Wrong username or password.')));
   } else {
-//    wp_redirect('#/tab/accounts');
     echo json_encode(array('loggedin' => true, 'message' => __('Login successful, redirecting...')));
   }
 
   die();
 }
 
+add_action('wp_ajax_ajaxlogin', 'ajax_login');
 add_action('wp_ajax_nopriv_ajaxlogin', 'ajax_login');
 
 
@@ -107,6 +106,5 @@ function ajax_registration()
   die();
 }
 
-//add_action( 'wp_ajax_nopriv_ajaxregistration', 'ajax_registration', 100 );
-
-add_action( 'wp_ajax_ajaxregistration', 'ajax_registration', 100 );
+add_action( 'wp_ajax_nopriv_ajaxregistration', 'ajax_registration' );
+add_action( 'wp_ajax_ajaxregistration', 'ajax_registration');

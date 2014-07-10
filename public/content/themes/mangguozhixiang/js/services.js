@@ -60,6 +60,14 @@ angular.module('starter.services', ['ngResource'])
                 return user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
             },
             register: function(user, success, error) {
+
+//                $http({
+//                    method: 'POST',
+//                    url: '/site/wp-admin/admin-ajax.php?action=ajaxregistration',
+//                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+//                    data: user
+//                    });
+
                 $http.post('/site/wp-admin/admin-ajax.php?action=ajaxregistration', user).success(function(res) {
                     changeUser(res);
                     success();
