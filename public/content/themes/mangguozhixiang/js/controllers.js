@@ -18,10 +18,16 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.reload();
   })
 
-  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts) {
+  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading) {
 
     $scope.reload = function () {
-      $scope.post = Posts.get({id: $stateParams.id})
+      $ionicLoading.show({
+        template: '正在载入...'
+      });
+      Posts.get({id: $stateParams.id}).$promise.then(function(post){
+        $ionicLoading.hide();
+        $scope.post = post;
+      });
     };
 
     $scope.reload();
@@ -33,19 +39,16 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.photos2 = [];
 
     $scope.reload = function () {
+      $ionicLoading.show({
+        template: '正在载入...'
+      });
       Media.query(function (photos) {
-        $ionicLoading.show({
-          template: '正在载入...'
-        });
-
-        $scope.photos = photos;
-
-        while ($scope.photos.length) {
-          $scope.photos2.push($scope.photos.splice(0, 2))
-        }
-      }).$promise
-        .then(function () {
+      }).$promise.then(function (photos) {
           $ionicLoading.hide();
+          $scope.photos = photos;
+          while ($scope.photos.length) {
+            $scope.photos2.push($scope.photos.splice(0, 2))
+          }
         });
     };
 
