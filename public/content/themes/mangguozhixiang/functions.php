@@ -14,6 +14,7 @@ function mg_scripts()
   wp_enqueue_script('inoic', get_template_directory_uri() . '/lib/ionic/js/ionic.bundle.js', array('jquery'), '', true);
   wp_enqueue_script('ngResource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
   wp_enqueue_script('ngCookies', get_template_directory_uri() . '/js/angular-cookies.js', '', '', true);
+  wp_enqueue_script('ngSanitize', get_template_directory_uri() . '/js/angular-sanitize.js', '', '', true);
   wp_enqueue_script('routingConfig', get_template_directory_uri() . '/js/routing-config.js', '', '', true);
   wp_enqueue_script('app', get_template_directory_uri() . '/js/app.js', '', '', true);
   wp_enqueue_script('services', get_template_directory_uri() . '/js/services.js', '', '', true);
@@ -56,10 +57,17 @@ function ajax_login()
   $info['user_password'] = $_POST['password'];
   $info['remember'] = true;
   $user_signon = wp_signon($info, false);
+
   if ( is_wp_error($user_signon) ) {
     echo json_encode(array('loggedin' => false, 'message' => __('Wrong username or password.')));
   } else {
-    echo json_encode(array('loggedin' => true, 'message' => __('Login successful, redirecting...')));
+    echo json_encode([
+      'username' => $user_signon->user_nicename,
+      'display_name' => $user_signon->display_name,
+      'loggined' => true,
+      'role' => ['title' => 'user', 'bitMask' => 6] #TODO: 判断是用户还是管理员
+    ]);
+//    echo json_encode(array('loggedin' => true, 'message' => __('Login successful, redirecting...')));
   }
 
   die();
@@ -75,7 +83,6 @@ function ajax_registration()
   if ( !wp_verify_nonce($nonce, 'wp_json') )
     exit('Sorry!');
 
-  var_dump($_POST);
 
   $username = $_POST['username'];
   $email = $_POST['email'];
@@ -108,3 +115,32 @@ function ajax_registration()
 
 add_action( 'wp_ajax_nopriv_ajaxregistration', 'ajax_registration' );
 add_action( 'wp_ajax_ajaxregistration', 'ajax_registration');
+
+function ajax_logout() {
+  wp_logout();
+  status_header(200);
+}
+
+add_action( 'wp_ajax_nopriv_ajaxlogout', 'ajax_logout' );
+add_action( 'wp_ajax_ajaxlogout', 'ajax_logout');
+
+function ajax_reset_password() {
+  $user = wp_get_current_user();
+
+  if ( is_wp_error($user) ) {
+    if ( $user->get_error_code() === 'expired_key' ){
+      $status = 'expiredkey' ;
+    }
+    else{
+      $status = 'invalidkey' ;
+    }
+    echo $status;
+    die;
+  }
+
+  reset_password($user, $_POST['password']);
+  status_header(200);
+}
+
+add_action( 'wp_ajax_nopriv_ajaxresetpassword', 'ajax_reset_password' );
+add_action( 'wp_ajax_ajaxresetpassword', 'ajax_reset_password');

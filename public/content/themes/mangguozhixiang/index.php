@@ -12,6 +12,9 @@
       Templates are in the /templates folder (but you could also
       have templates inline in this html file if you'd like).
     -->
-    <ion-nav-view></ion-nav-view>
+    <ion-nav-view>
+      <div  ng-bind="error">
+      </div>
+    </ion-nav-view>
     <?php get_footer(); ?>
 

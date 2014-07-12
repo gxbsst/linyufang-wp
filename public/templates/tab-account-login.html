@@ -2,15 +2,15 @@
     <ion-content>
         <div ng-controller="LoginCtrl">
             <form ng-action="/site/wp-admin/admin-ajax.php?action=ajaxlogin" name="loginForm" method="post"
-                  ng-submit="login(user,loginForm)">
+                  ng-submit="login()">
                 <div class="list">
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Email</span>
-                        <input name="username" type="text" ng-model="user.username" placeholder="Email" required>
+                        <input name="username" type="text" ng-model="username" placeholder="Email" required>
                     </label>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Password</span>
-                        <input type="password" name="password" ng-model="user.password" placeholder="Password" required>
+                        <input type="password" name="password" ng-model="password" placeholder="Password" required>
                     </label>
                 </div>
                 <div class="padding">
