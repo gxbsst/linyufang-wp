@@ -18,7 +18,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.reload();
   })
 
-  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading) {
+  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment) {
 
     $scope.reload = function () {
       $ionicLoading.show({
@@ -32,6 +32,50 @@ angular.module('starter.controllers', ['ngSanitize'])
 
     $scope.reload();
 
+    $ionicModal.fromTemplateUrl('/templates/comment-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
+
+    $scope.newComment = function(post) {
+      $scope.modal.show();
+    };
+
+  })
+
+  .controller('CommentCtrl', function($scope, Comment, $stateParams, $rootScope){
+
+    $scope.cancelComment = function() {
+      $scope.$parent.modal.hide();
+    }
+
+    $scope.comment = [];
+    $scope.postComment = function(post) {
+      Comment.createComment({post_id: $stateParams.id, comment: $scope.comment.content}, function(res){
+        $rootScope.$broadcast('comment:create');
+        $scope.$parent.modal.hide();
+      });
+    }
+
+  })
+
+  .controller('CommentListCtrl', function($scope, PostComment, $stateParams){
+
+    $scope.reloadComment = function() {
+      PostComment.query({id: $stateParams.id}).$promise.then(function(comments){
+        $scope.comments = comments;
+        console.log($scope.comments);
+      })
+    }
+
+    $scope.reloadComment();
+
+    $scope.$on("comment:create", function(event){
+      $scope.reloadComment();
+      return;
+    });
   })
 
   .controller('PhotosCtrl', function ($scope, $ionicModal, Media, $ionicLoading) {

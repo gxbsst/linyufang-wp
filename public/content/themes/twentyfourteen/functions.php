@@ -1,4 +1,19 @@
 <?php
+
+function mg_scripts()
+{
+  require_once(GFCommon::get_base_path() . "/form_display.php");
+  $a = 1;
+
+//  var_dump(RGFormsModel::get_form_unique_id(1));
+  $form = RGFormsModel::get_form_meta(1, true);
+
+  $result = GFFormDisplay::get_state($form, []);
+
+  return false;
+}
+
+add_action('wp_enqueue_scripts', 'mg_scripts');
 /**
  * Twenty Fourteen functions and definitions
  *

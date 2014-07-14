@@ -33,6 +33,25 @@ angular.module('starter.services', ['ngResource'])
   .service('User', function ($resource, Actions) {
     return $resource('/?json_route=/users/:id', {id: '@id'}, Actions);
   })
+
+  .service('PostComment', function ($resource, Actions) {
+    return $resource('/?json_route=/posts/:id/comments/:comment_id', {id: '@id', comment_id: '@comment_id'}, Actions);
+  })
+
+  .factory('Comment', function($http, $resource, Actions){
+    return {
+      createComment: function(comment, success, error) {
+        $http.post('/site/wp-admin/admin-ajax.php?action=create_comment', comment).success(function(res){
+         success();
+        }).error(function(err){
+          alert(err);
+          error();
+        });
+      },
+      getComments: function(){
+      }
+    }
+  })
   .factory('Auth', function ($http, $cookieStore) {
 
     var accessLevels = routingConfig.accessLevels

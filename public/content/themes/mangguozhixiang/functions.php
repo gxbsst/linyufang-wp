@@ -29,9 +29,23 @@ function mg_scripts()
   #wp_enqueue_script('rootController', get_template_directory_uri() . '/js/controllers/root_controller.js.coffee', '', '', true);
   #wp_enqueue_script('mainController', get_template_directory_uri() . '/js/controllers/main_controller.js.coffee', '', '', true);
 
+  # 主要为post gform表单使用
+  require_once(GFCommon::get_base_path() . "/form_display.php");
+  $form_id = 1;
+  $form_unique_id = RGFormsModel::get_form_unique_id($form_id);
+  $form = RGFormsModel::get_form_meta($form_id, true);
+  $form_state = GFFormDisplay::get_state($form, []);
+
   $nonce = wp_create_nonce('wp_json');
-  wp_localize_script('wp-api', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce));
+  wp_localize_script('wp-api', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state));
   wp_enqueue_script('wp-api');
+
+//  require_once(GFCommon::get_base_path() . "/form_display.php");
+//  $form_unique_id = RGFormsModel::get_form_unique_id(1);
+//  $form = RGFormsModel::get_form_meta(1, true);
+//  $form_state = GFFormDisplay::get_state($form, []);
+//  wp_localize_script('gform', 'GForm', array('form_unique_id' => $form_unique_id, 'form_state' => $form_state));
+//  wp_enqueue_script('gform');
 }
 
 if ( !is_admin() ) add_action('wp_enqueue_scripts', 'mg_scripts');
@@ -113,26 +127,27 @@ function ajax_registration()
   die();
 }
 
-add_action( 'wp_ajax_nopriv_ajaxregistration', 'ajax_registration' );
-add_action( 'wp_ajax_ajaxregistration', 'ajax_registration');
+add_action('wp_ajax_nopriv_ajaxregistration', 'ajax_registration');
+add_action('wp_ajax_ajaxregistration', 'ajax_registration');
 
-function ajax_logout() {
+function ajax_logout()
+{
   wp_logout();
   status_header(200);
 }
 
-add_action( 'wp_ajax_nopriv_ajaxlogout', 'ajax_logout' );
-add_action( 'wp_ajax_ajaxlogout', 'ajax_logout');
+add_action('wp_ajax_nopriv_ajaxlogout', 'ajax_logout');
+add_action('wp_ajax_ajaxlogout', 'ajax_logout');
 
-function ajax_reset_password() {
+function ajax_reset_password()
+{
   $user = wp_get_current_user();
 
   if ( is_wp_error($user) ) {
-    if ( $user->get_error_code() === 'expired_key' ){
-      $status = 'expiredkey' ;
-    }
-    else{
-      $status = 'invalidkey' ;
+    if ( $user->get_error_code() === 'expired_key' ) {
+      $status = 'expiredkey';
+    } else {
+      $status = 'invalidkey';
     }
     echo $status;
     die;
@@ -142,5 +157,69 @@ function ajax_reset_password() {
   status_header(200);
 }
 
-add_action( 'wp_ajax_nopriv_ajaxresetpassword', 'ajax_reset_password' );
-add_action( 'wp_ajax_ajaxresetpassword', 'ajax_reset_password');
+add_action('wp_ajax_nopriv_ajaxresetpassword', 'ajax_reset_password');
+add_action('wp_ajax_ajaxresetpassword', 'ajax_reset_password');
+
+function ajax_create_comment()
+{
+
+//  $nonce = getallheaders()['X-WP-Nonce'];
+//  if ( !wp_verify_nonce($nonce, 'wp_json') )
+//    exit('Sorry!');
+
+  $time = current_time('mysql');
+  $author = wp_get_current_user();
+  $post_id = $_POST['post_id'];
+  $comment = $_POST['comment'];
+  $data = array(
+    'comment_post_ID' => $post_id,
+    'comment_author' => $author->data->user_login,
+    'comment_author_email' => $author->data->user_email,
+    'comment_author_url' => $author->data->user_url,
+    'comment_content' => $comment,
+    'comment_type' => '',
+    'comment_parent' => 0,
+    'user_id' => 1,
+    'comment_author_IP' => $_SERVER['REMOTE_ADDR'],
+    'comment_agent' => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729)',
+    'comment_date' => $time,
+    'comment_approved' => 1,
+  );
+
+  wp_insert_comment($data);
+  die();
+}
+
+add_action('wp_ajax_nopriv_create_comment', 'ajax_create_comment');
+add_action('wp_ajax_create_comment', 'ajax_create_comment');
+
+function ajax_create_order()
+{
+  require_once(GFCommon::get_base_path() . "/form_display.php");
+  $form_id = 1;
+  $form_state_1 = getallheaders()['GFORM-State'];
+  $form_unique_id = getallheaders()['GFORM-Unique_Id'];
+
+  $params = [
+    'is_submit_1' => '1',
+    'gform_submit' => '1',
+    'gfrom_unique_id' => $form_unique_id,
+    'state_1' => $form_state_1,
+    'gform_target_page_number_1' => 0,
+    'gform_source_page_number_1'  => 0,
+    'gform_field_values' => '',
+    'gform_ajax' => true
+  ];
+
+  $new_params = array_merge($params, $_POST);
+
+  $_POST = $new_params;
+
+  GFFormDisplay::process_form($form_id);
+
+  echo json_encode(array('a' => 111));
+  die();
+}
+
+add_action('wp_ajax_nopriv_create_order', 'ajax_create_order');
+add_action('wp_ajax_create_order', 'ajax_create_order');

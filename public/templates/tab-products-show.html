@@ -1,15 +1,32 @@
 <ion-view title="{{post.title}}">
-    <ion-content class="has-header" padding="true">
+  <ion-content class="has-header" padding="true">
+    <div class="item item-body">
+      <a href="#/tab/products/{{post.ID}}">
+        <img class="full-image" ng-src={{post.featured_image.guid}}>
+      </a>
 
+      <div ng-bind-html="post.content"></div>
+    </div>
+    <a class="item item-icon-left" href="javascript:void(0)" ng-click="newComment(post)">
+      <i class="icon ion-chatbox"></i>
+      评论
+    </a>
 
-        <div class="item item-body">
+    <div ng-controller="CommentListCtrl">
+      <div class="list padding-top" ng-repeat="comment in comments">
+        <div class="item item-avatar">
+          <img ng-src="{{comment.author.avatar}}">
 
-            <a href="#/tab/products/{{post.ID}}" >
-                <img class="full-image" ng-src={{post.featured_image.guid}}>
-            </a>
-            <div ng-bind-html="post.content"></div>
+          <h2>{{comment.author.name}}</h2>
+
+          <p>{{comment.date}}</p>
         </div>
-
-    </ion-content>
+        <div class="item item-body">
+          <div ng-bind-html="comment.content">
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>
 
