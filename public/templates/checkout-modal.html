@@ -1,0 +1,27 @@
+<div class="modal" ng-controller="CheckoutCtrl">
+  <ion-header-bar>
+    <h1 class="title">下订单-{{post.title}}</h1>
+    <button class="button button-clear button-positive" ng-click="cancelCheckout()">取消</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <form ng-submit="doCheckout(post)">
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">姓名:</span>
+          <input type="text" name="phone" ng-model="shipping.username" placeholder="姓名" />
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">手机号码:</span>
+          <input type="text" name="phone" ng-model="shipping.phone" placeholder="手机号码" />
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">邮寄地址:</span>
+          <input type="text" name="address" ng-model="shipping.address" placeholder="邮寄地址" />
+        </label>
+      </div>
+      <button class="button button-full button-positive">
+        下单
+      </button>
+    </form>
+  </ion-content>
+</div>

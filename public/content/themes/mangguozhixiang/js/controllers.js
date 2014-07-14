@@ -18,7 +18,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.reload();
   })
 
-  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment) {
+  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment, $rootScope) {
 
     $scope.reload = function () {
       $ionicLoading.show({
@@ -43,6 +43,20 @@ angular.module('starter.controllers', ['ngSanitize'])
       $scope.modal.show();
     };
 
+
+    $ionicModal.fromTemplateUrl('/templates/checkout-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.checkoutModal = modal;
+    });
+
+    $scope.checkout = function(post) {
+      $rootScope = post;
+
+      $scope.checkoutModal.show();
+    }
+
   })
 
   .controller('CommentCtrl', function($scope, Comment, $stateParams, $rootScope){
@@ -56,6 +70,23 @@ angular.module('starter.controllers', ['ngSanitize'])
       Comment.createComment({post_id: $stateParams.id, comment: $scope.comment.content}, function(res){
         $rootScope.$broadcast('comment:create');
         $scope.$parent.modal.hide();
+      });
+    }
+
+  })
+
+  .controller('CheckoutCtrl', function($scope, Order, $stateParams, $rootScope){
+
+    $scope.cancelCheckout = function() {
+      $scope.$parent.checkoutModal.hide();
+    }
+
+    $scope.comment = [];
+    $scope.doCheckout = function(post) {
+
+      Order.create({input_1: $stateParams.id, input_3: post.title, input_4: 'price', input_5: 'shiping_address', input_7: 'username', input_8: 'phone'}, function(res){
+        $rootScope.$broadcast('order:create');
+        $scope.$parent.checkoutModal.hide();
       });
     }
 

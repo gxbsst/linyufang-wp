@@ -38,6 +38,19 @@ angular.module('starter.services', ['ngResource'])
     return $resource('/?json_route=/posts/:id/comments/:comment_id', {id: '@id', comment_id: '@comment_id'}, Actions);
   })
 
+  .factory('Order', function($http, $resource, Actions){
+    return {
+      create: function(order, success, error) {
+        $http.post('/site/wp-admin/admin-ajax.php?action=create_order', order).success(function(res){
+          success();
+        }).error(function(err){
+          alert(err);
+          error();
+        });
+      }
+    }
+  })
+
   .factory('Comment', function($http, $resource, Actions){
     return {
       createComment: function(comment, success, error) {
