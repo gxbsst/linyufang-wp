@@ -47,6 +47,14 @@ angular.module('starter.services', ['ngResource'])
           alert(err);
           error();
         });
+      },
+      query: function(success, error) {
+        $http.get('/site/wp-admin/admin-ajax.php?action=get_orders').success(function(res){
+          success(res);
+        }).error(function(err){
+          alert(err);
+          error();
+        });
       }
     }
   })

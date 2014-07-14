@@ -201,6 +201,11 @@ function ajax_create_order()
   $form_unique_id = getallheaders()['GFORM-Unique_Id'];
 
   $params = [
+    'input_2' => get_current_user_id(),
+    'input_8' => '未支付',
+    'input_9' => 'ALIPAY',
+    'input_10' => uniqid(),
+    'input_11' => wp_get_current_user()->user_email,
     'is_submit_1' => '1',
     'gform_submit' => '1',
     'gfrom_unique_id' => $form_unique_id,
@@ -223,3 +228,12 @@ function ajax_create_order()
 
 add_action('wp_ajax_nopriv_create_order', 'ajax_create_order');
 add_action('wp_ajax_create_order', 'ajax_create_order');
+
+function ajax_get_orders()
+{
+  $orders = RGFormsModel::get_leads(1, 0, 'DESC',  wp_get_current_user()->user_email);
+  wp_send_json($orders);
+}
+
+add_action('wp_ajax_nopriv_get_orders', 'ajax_get_orders');
+add_action('wp_ajax_get_orders', 'ajax_get_orders');

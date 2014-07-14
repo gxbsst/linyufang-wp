@@ -24,7 +24,7 @@ angular.module('starter.controllers', ['ngSanitize'])
       $ionicLoading.show({
         template: '正在载入...'
       });
-      Posts.get({id: $stateParams.id}).$promise.then(function(post){
+      Posts.get({id: $stateParams.id}).$promise.then(function (post) {
         $ionicLoading.hide();
         $scope.post = post;
       });
@@ -35,11 +35,11 @@ angular.module('starter.controllers', ['ngSanitize'])
     $ionicModal.fromTemplateUrl('/templates/comment-modal.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) {
+    }).then(function (modal) {
       $scope.modal = modal;
     });
 
-    $scope.newComment = function(post) {
+    $scope.newComment = function (post) {
       $scope.modal.show();
     };
 
@@ -47,11 +47,11 @@ angular.module('starter.controllers', ['ngSanitize'])
     $ionicModal.fromTemplateUrl('/templates/checkout-modal.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) {
+    }).then(function (modal) {
       $scope.checkoutModal = modal;
     });
 
-    $scope.checkout = function(post) {
+    $scope.checkout = function (post) {
       $rootScope = post;
 
       $scope.checkoutModal.show();
@@ -59,15 +59,15 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('CommentCtrl', function($scope, Comment, $stateParams, $rootScope){
+  .controller('CommentCtrl', function ($scope, Comment, $stateParams, $rootScope) {
 
-    $scope.cancelComment = function() {
+    $scope.cancelComment = function () {
       $scope.$parent.modal.hide();
     }
 
     $scope.comment = [];
-    $scope.postComment = function(post) {
-      Comment.createComment({post_id: $stateParams.id, comment: $scope.comment.content}, function(res){
+    $scope.postComment = function (post) {
+      Comment.createComment({post_id: $stateParams.id, comment: $scope.comment.content}, function (res) {
         $rootScope.$broadcast('comment:create');
         $scope.$parent.modal.hide();
       });
@@ -75,27 +75,34 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('CheckoutCtrl', function($scope, Order, $stateParams, $rootScope){
+  .controller('CheckoutCtrl', function ($scope, Order, $stateParams, $rootScope) {
 
-    $scope.cancelCheckout = function() {
+    $scope.cancelCheckout = function () {
       $scope.$parent.checkoutModal.hide();
     }
 
-    $scope.comment = [];
-    $scope.doCheckout = function(post) {
+    $scope.order = [];
+    $scope.doCheckout = function (post) {
 
-      Order.create({input_1: $stateParams.id, input_3: post.title, input_4: 'price', input_5: 'shiping_address', input_7: 'username', input_8: 'phone'}, function(res){
-        $rootScope.$broadcast('order:create');
-        $scope.$parent.checkoutModal.hide();
-      });
+      Order.create({
+          input_1: $stateParams.id,
+          input_3: post.title,
+          input_4: 'price',
+          input_5: $scope.order.address,
+          input_7: $scope.order.username,
+          input_8: $scope.order.phone},
+        function (res) {
+          $rootScope.$broadcast('order:create');
+          $scope.$parent.checkoutModal.hide();
+        });
     }
 
   })
 
-  .controller('CommentListCtrl', function($scope, PostComment, $stateParams){
+  .controller('CommentListCtrl', function ($scope, PostComment, $stateParams) {
 
-    $scope.reloadComment = function() {
-      PostComment.query({id: $stateParams.id}).$promise.then(function(comments){
+    $scope.reloadComment = function () {
+      PostComment.query({id: $stateParams.id}).$promise.then(function (comments) {
         $scope.comments = comments;
         console.log($scope.comments);
       })
@@ -103,7 +110,7 @@ angular.module('starter.controllers', ['ngSanitize'])
 
     $scope.reloadComment();
 
-    $scope.$on("comment:create", function(event){
+    $scope.$on("comment:create", function (event) {
       $scope.reloadComment();
       return;
     });
@@ -150,8 +157,24 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('OrdersCtrl', function ($scope, $ionicModal) {
+  .controller('OrdersCtrl', function ($scope, $ionicModal, $rootScope, Order, $ionicLoading) {
 
+    $scope.reload = function () {
+      $ionicLoading.show({
+        template: '正在载入...'
+      });
+      Order.query(function(orders){
+         $scope.orders = orders;
+         console.log(orders);
+        $ionicLoading.hide();
+      },
+        function(err) {
+          alert(err);
+        }
+      );
+    };
+
+    $scope.reload();
   })
 
   .controller('OrdersShowCtrl', function ($scope) {
