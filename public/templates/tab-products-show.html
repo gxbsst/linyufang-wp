@@ -10,7 +10,7 @@
 
     <h4>请选择你要购买的套餐:</h4>
 
-    <label class="item item-radio" ng-repeat="plan in plans">
+    <label class="item item-radio" ng-repeat="plan in  metaPlans">
       <input type="radio" name="weight" ng-model="product.plan" ng-value="plan.value">
       <div class="item-content">
         <span class="button  button-small icon-right button-calm" ng-bind="plan.name"></span>

@@ -18,11 +18,9 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.reload();
   })
 
-  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment, $rootScope, Plans, $ionicPopup, $location, Auth) {
+  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment, $rootScope, $ionicPopup, $location, Auth, PostMetas) {
 
     $scope.product = {};
-
-    $scope.plans = Plans;
 
     $scope.reload = function () {
       $ionicLoading.show({
@@ -31,6 +29,14 @@ angular.module('starter.controllers', ['ngSanitize'])
       Posts.get({id: $stateParams.id}).$promise.then(function (post) {
         $ionicLoading.hide();
         $scope.post = post;
+      });
+
+      PostMetas.query({id: $stateParams.id}).$promise.then(function(metas){
+        $rootScope.metaPlans = [];
+        metas.forEach(function(meta){
+         var value = meta.value.split(';');
+         $rootScope.metaPlans.push({name: value[0], value: value[1], text: value[2]});
+        });
       });
     };
 
@@ -80,10 +86,10 @@ angular.module('starter.controllers', ['ngSanitize'])
         var planIndex;
 
         switch(product.plan){
-          case 88:
+          case '88':
             planIndex = 0;
             break;
-          case 168:
+          case '158':
             planIndex = 1;
             break;
           default:
@@ -91,8 +97,8 @@ angular.module('starter.controllers', ['ngSanitize'])
         }
 
         if(planIndex != undefined ){
-          $rootScope.selectPlan = Plans[planIndex];
-          $rootScope.planInfo = Plans[planIndex]['name'] + ' - ' + Plans[planIndex]['text'];
+          $rootScope.selectPlan = $rootScope.metaPlans[planIndex];
+          $rootScope.planInfo = $rootScope.metaPlans[planIndex]['name'] + ' - ' + $rootScope.metaPlans[planIndex]['text'];
         }else{
           $rootScope.selectPlan = {name: product.plan, value: '', text: ''}
           $rootScope.planInfo = product.plan;
@@ -119,9 +125,8 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('CheckoutCtrl', function ($scope, Order, $stateParams, $rootScope, $location, Plans) {
+  .controller('CheckoutCtrl', function ($scope, Order, $stateParams, $rootScope, $location) {
 
-    $scope.plans = Plans;
     $scope.order = [];
 
 
@@ -262,7 +267,7 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('AccountCtrl', function ($scope, $rootScope, $cookieStore, Auth, $location, User, $ionicLoading) {
+  .controller('AccountCtrl', function ($scope, $rootScope, $cookieStore, Auth, $location, User, $ionicLoading, $window) {
     $rootScope.currentUser = $cookieStore.get('user');
 
     $scope.loadCurrentUser = function () {
@@ -283,6 +288,7 @@ angular.module('starter.controllers', ['ngSanitize'])
       Auth.logout(
         function (req) {
           $location.path('/tab/login');
+          $window.location.reload();
         },
         function (err) {
 
@@ -291,7 +297,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     }
   })
 
-  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore) {
+  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore, $window) {
 
     if (Auth.isLoggedIn())
       $location.path('/')
@@ -306,6 +312,7 @@ angular.module('starter.controllers', ['ngSanitize'])
         function (res) {
           $rootScope.currentUser = $cookieStore.get('user');
           $location.path('/tab/products');
+          $window.location.reload();
         },
         function (err) {
           console.log('err', err);

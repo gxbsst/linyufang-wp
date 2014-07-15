@@ -266,7 +266,7 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
         })
 
       // if none of the above states are matched, use this as the fallback
-//      $urlRouterProvider.otherwise('/tab/products');
+      $urlRouterProvider.otherwise('/tab/products');
 
     })
     .run(['$rootScope', '$state', 'Auth', function ($rootScope, $state, Auth) {
