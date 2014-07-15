@@ -18,7 +18,11 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.reload();
   })
 
-  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment, $rootScope) {
+  .controller('ProductsShowCtrl', function ($scope, $stateParams, Posts, $ionicLoading, $ionicModal, Comment, $rootScope, Plans, $ionicPopup, $location, Auth) {
+
+    $scope.product = {};
+
+    $scope.plans = Plans;
 
     $scope.reload = function () {
       $ionicLoading.show({
@@ -51,10 +55,50 @@ angular.module('starter.controllers', ['ngSanitize'])
       $scope.checkoutModal = modal;
     });
 
-    $scope.checkout = function (post) {
-      $rootScope = post;
+    $scope.checkout = function (post, product) {
 
-      $scope.checkoutModal.show();
+      if (!Auth.isLoggedIn()){
+        $location.path('/tab/login');
+        return false;
+      }
+
+      if(!product.plan) {
+        var alertPopup = $ionicPopup.alert({
+          title: '信息提示',
+          template: '请选择你需要购买的套餐或者输入购买的数量，谢谢.'
+        });
+        alertPopup.then(function(res) {
+          console.log('Thank you for not eating my delicious ice cream cone');
+        });
+        return false;
+      }
+
+      $scope.checkoutModal.show().then(function(){
+        $rootScope.post = post;
+        $rootScope.product = product;
+
+        var planIndex;
+
+        switch(product.plan){
+          case 88:
+            planIndex = 0;
+            break;
+          case 168:
+            planIndex = 1;
+            break;
+          default:
+            planIndex = undefined;
+        }
+
+        if(planIndex != undefined ){
+          $rootScope.selectPlan = Plans[planIndex];
+          $rootScope.planInfo = Plans[planIndex]['name'] + ' - ' + Plans[planIndex]['text'];
+        }else{
+          $rootScope.selectPlan = {name: product.plan, value: '', text: ''}
+          $rootScope.planInfo = product.plan;
+        }
+
+      });
     }
 
   })
@@ -75,25 +119,31 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('CheckoutCtrl', function ($scope, Order, $stateParams, $rootScope) {
+  .controller('CheckoutCtrl', function ($scope, Order, $stateParams, $rootScope, $location, Plans) {
+
+    $scope.plans = Plans;
+    $scope.order = [];
+
 
     $scope.cancelCheckout = function () {
       $scope.$parent.checkoutModal.hide();
     }
 
-    $scope.order = [];
     $scope.doCheckout = function (post) {
 
       Order.create({
           input_1: $stateParams.id,
           input_3: post.title,
-          input_4: 'price',
+          input_4: $rootScope.selectPlan['value'],
           input_5: $scope.order.address,
-          input_7: $scope.order.username,
-          input_8: $scope.order.phone},
+          input_6: $scope.order.username,
+          input_7: $scope.order.phone,
+          input_12: $rootScope.selectPlan['name']
+        },
         function (res) {
           $rootScope.$broadcast('order:create');
           $scope.$parent.checkoutModal.hide();
+          $location.path('tab/orders');
         });
     }
 
@@ -157,7 +207,7 @@ angular.module('starter.controllers', ['ngSanitize'])
 
   })
 
-  .controller('OrdersCtrl', function ($scope, $ionicModal, $rootScope, Order, $ionicLoading) {
+  .controller('OrdersCtrl', function ($scope, $ionicModal, $rootScope, Order, $ionicLoading, $location, $ionicPopup) {
 
     $scope.reload = function () {
       $ionicLoading.show({
@@ -175,21 +225,41 @@ angular.module('starter.controllers', ['ngSanitize'])
     };
 
     $scope.reload();
+
+    $scope.viewOrder = function(order) {
+      $rootScope.order = order;
+      $location.path('tab/orders/' + order[10]);
+    }
+
+
+    $scope.cancelOrder = function(order) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: '取消订单',
+        template: '取消订单后，该订单不可回复， 您确定？',
+        cancelText: '取消',
+        okText: '确定'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          Order.cancel(
+            order,
+            function(success){
+              order[8] = 'cancel';
+            },
+            function(error){
+
+            })
+        } else {
+          console.log('You are not sure');
+        }
+      });
+    }
+
   })
 
   .controller('OrdersShowCtrl', function ($scope) {
 
-  })
-
-  .controller('DashCtrl', function ($scope) {
-  })
-
-  .controller('FriendsCtrl', function ($scope, Friends) {
-    $scope.friends = Friends.all();
-  })
-
-  .controller('FriendDetailCtrl', function ($scope, $stateParams, Friends) {
-    $scope.friend = Friends.get($stateParams.friendId);
   })
 
   .controller('AccountCtrl', function ($scope, $rootScope, $cookieStore, Auth, $location, User, $ionicLoading) {

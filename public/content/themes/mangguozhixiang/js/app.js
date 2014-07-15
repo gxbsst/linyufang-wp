@@ -28,7 +28,11 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
         put: {method: 'PUT'},
         update: {method: 'PUT'},
         remove: {method: 'DELETE'}
-      }
+      },
+      Plans: [
+        {name: '套餐一', value: 88, text: '5千克 - 88元'},
+        {name: '套餐二', value: 158, text: '10千克 - 158元'}
+      ]
     })
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {

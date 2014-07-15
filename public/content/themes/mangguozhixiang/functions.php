@@ -19,6 +19,7 @@ function mg_scripts()
   wp_enqueue_script('app', get_template_directory_uri() . '/js/app.js', '', '', true);
   wp_enqueue_script('services', get_template_directory_uri() . '/js/services.js', '', '', true);
   wp_enqueue_script('directive', get_template_directory_uri() . '/js/directives/ajax_form.js', array('jquery'), '', true);
+  wp_enqueue_script('filters', get_template_directory_uri() . '/js/filters/filter.js', '', '', true);
   wp_enqueue_script('controllers', get_template_directory_uri() . '/js/controllers.js', '', '', true);
   #wp_enqueue_script('angular', get_template_directory_uri() . '/js/angular.js', '', '', true);
   #wp_enqueue_script('angular-resource', get_template_directory_uri() . '/js/angular-resource.js', '', '', true);
@@ -202,8 +203,8 @@ function ajax_create_order()
 
   $params = [
     'input_2' => get_current_user_id(),
-    'input_8' => '未支付',
-    'input_9' => 'ALIPAY',
+    'input_8' => 'nopay',
+    'input_9' => 'alipay',
     'input_10' => uniqid(),
     'input_11' => wp_get_current_user()->user_email,
     'is_submit_1' => '1',
@@ -237,3 +238,20 @@ function ajax_get_orders()
 
 add_action('wp_ajax_nopriv_get_orders', 'ajax_get_orders');
 add_action('wp_ajax_get_orders', 'ajax_get_orders');
+
+function ajax_cancel_order()
+{
+  global $wpdb;
+  $lead_detail_table = 'wp_rg_lead_detail';
+  $lead_id = $_POST['id'];
+  $input_id = 8;
+  $value = 'cancel';
+
+  $current_fields = $wpdb->get_results($wpdb->prepare("SELECT id, field_number FROM $lead_detail_table WHERE lead_id=%d", $lead_id));
+  $lead_detail_id = RGFormsModel::get_lead_detail_id($current_fields, $input_id);
+  $wpdb->update($lead_detail_table, array("value" => $value), array("id" => $lead_detail_id), array("%s"), array("%d"));
+  wp_send_json($lead_detail_id);
+}
+
+add_action('wp_ajax_nopriv_cancel_order', 'ajax_cancel_order');
+add_action('wp_ajax_cancel_order', 'ajax_cancel_order');

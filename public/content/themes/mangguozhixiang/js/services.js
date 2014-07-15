@@ -55,6 +55,14 @@ angular.module('starter.services', ['ngResource'])
           alert(err);
           error();
         });
+      },
+      cancel: function(order, success, error) {
+        $http.post('/site/wp-admin/admin-ajax.php?action=cancel_order', {id: order['id']}).success(function(res){
+          success(res);
+        }).error(function(err){
+          alert(err);
+          error();
+        });
       }
     }
   })

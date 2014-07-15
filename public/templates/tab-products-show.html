@@ -6,8 +6,26 @@
       </a>
       <div ng-bind-html="post.content"></div>
     </div>
+
+
+    <h4>请选择你要购买的套餐:</h4>
+
+    <label class="item item-radio" ng-repeat="plan in plans">
+      <input type="radio" name="weight" ng-model="product.plan" ng-value="plan.value">
+      <div class="item-content">
+        <span class="button  button-small icon-right button-calm" ng-bind="plan.name"></span>
+        <span ng-bind="plan.text"></span>
+      </div>
+      <i class="radio-icon ion-checkmark"></i>
+    </label>
+
+
+    <label class="item item-input">
+      <input type="text" ng-keypress="" ng-model="product.plan" placeholder="请输入你要购买多少？">
+    </label>
+
     <div class="padding-top padding-bottom">
-      <button class="button button-full button-energized" ng-click="checkout(post)">购买</button>
+      <button class="button button-full button-energized" ng-click="checkout(post, product)">购买</button>
     </div>
     <a class="item item-icon-left" href="javascript:void(0)" ng-click="newComment(post)">
       <i class="icon ion-chatbox"></i>
