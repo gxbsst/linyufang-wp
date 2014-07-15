@@ -33,10 +33,7 @@ angular.module('starter.controllers', ['ngSanitize'])
 
       PostMetas.query({id: $stateParams.id}).$promise.then(function(metas){
         $rootScope.metaPlans = [];
-        metas.forEach(function(meta){
-         var value = meta.value.split(';');
-         $rootScope.metaPlans.push({name: value[0], value: value[1], text: value[2]});
-        });
+        $rootScope.metaPlans = eval('(' + metas[0].value + ')');
       });
     };
 
@@ -86,10 +83,10 @@ angular.module('starter.controllers', ['ngSanitize'])
         var planIndex;
 
         switch(product.plan){
-          case '88':
+          case 88:
             planIndex = 0;
             break;
-          case '158':
+          case 158:
             planIndex = 1;
             break;
           default:
@@ -98,7 +95,7 @@ angular.module('starter.controllers', ['ngSanitize'])
 
         if(planIndex != undefined ){
           $rootScope.selectPlan = $rootScope.metaPlans[planIndex];
-          $rootScope.planInfo = $rootScope.metaPlans[planIndex]['name'] + ' - ' + $rootScope.metaPlans[planIndex]['text'];
+          $rootScope.planInfo = $rootScope.selectPlan['name'] + '(' + $rootScope.selectPlan['value'] +'元)' + ' - ' + $rootScope.selectPlan['text'];
         }else{
           $rootScope.selectPlan = {name: product.plan, value: '', text: ''}
           $rootScope.planInfo = product.plan;
@@ -240,7 +237,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.cancelOrder = function(order) {
       var confirmPopup = $ionicPopup.confirm({
         title: '取消订单',
-        template: '取消订单后，该订单不可回复， 您确定？',
+        template: '取消订单后，该订单不可恢复， 您确定取消？',
         cancelText: '取消',
         okText: '确定'
       });
@@ -271,13 +268,13 @@ angular.module('starter.controllers', ['ngSanitize'])
     $rootScope.currentUser = $cookieStore.get('user');
 
     $scope.loadCurrentUser = function () {
-      $ionicLoading.show({
-        template: '正在载入...'
-      });
+//      $ionicLoading.show({
+//        template: '正在载入...'
+//      });
       User.get({id: 'me'},function (user) {
         $scope.user = user;
       }).$promise.then(function () {
-          $ionicLoading.hide();
+//          $ionicLoading.hide();
         }
       );
     }
@@ -287,8 +284,8 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.logout = function () {
       Auth.logout(
         function (req) {
-          $location.path('/tab/login');
           $window.location.reload();
+          $location.path('/tab/login');
         },
         function (err) {
 
@@ -297,7 +294,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     }
   })
 
-  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore, $window) {
+  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore, $window, $ionicPopup) {
 
     if (Auth.isLoggedIn())
       $location.path('/')
@@ -310,9 +307,19 @@ angular.module('starter.controllers', ['ngSanitize'])
           password: $scope.password
         },
         function (res) {
-          $rootScope.currentUser = $cookieStore.get('user');
-          $location.path('/tab/products');
-          $window.location.reload();
+          if(res.loggedin === false) {
+            var alertPopup = $ionicPopup.alert({
+              title: '错误信息',
+              template: '用户名或者密码有误!'
+            });
+            alertPopup.then(function (res) {
+              $location.path('/tab/login')
+            });
+          }else{
+            $window.location.reload();
+            $rootScope.currentUser = $cookieStore.get('user');
+            $location.path('/tab/products');
+          }
         },
         function (err) {
           console.log('err', err);

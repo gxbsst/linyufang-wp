@@ -30,6 +30,15 @@ function mg_scripts()
   #wp_enqueue_script('rootController', get_template_directory_uri() . '/js/controllers/root_controller.js.coffee', '', '', true);
   #wp_enqueue_script('mainController', get_template_directory_uri() . '/js/controllers/main_controller.js.coffee', '', '', true);
 
+//  require_once(GFCommon::get_base_path() . "/form_display.php");
+//  $form_unique_id = RGFormsModel::get_form_unique_id(1);
+//  $form = RGFormsModel::get_form_meta(1, true);
+//  $form_state = GFFormDisplay::get_state($form, []);
+//  wp_localize_script('gform', 'GForm', array('form_unique_id' => $form_unique_id, 'form_state' => $form_state));
+//  wp_enqueue_script('gform');
+}
+
+function init_js_object() {
   # 主要为post gform表单使用
   require_once(GFCommon::get_base_path() . "/form_display.php");
   $form_id = 1;
@@ -40,14 +49,9 @@ function mg_scripts()
   $nonce = wp_create_nonce('wp_json');
   wp_localize_script('wp-api', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state));
   wp_enqueue_script('wp-api');
-
-//  require_once(GFCommon::get_base_path() . "/form_display.php");
-//  $form_unique_id = RGFormsModel::get_form_unique_id(1);
-//  $form = RGFormsModel::get_form_meta(1, true);
-//  $form_state = GFFormDisplay::get_state($form, []);
-//  wp_localize_script('gform', 'GForm', array('form_unique_id' => $form_unique_id, 'form_state' => $form_state));
-//  wp_enqueue_script('gform');
 }
+
+if ( !is_admin() )  add_action('wp_enqueue_scripts', 'init_js_object');
 
 if ( !is_admin() ) add_action('wp_enqueue_scripts', 'mg_scripts');
 
@@ -74,7 +78,12 @@ function ajax_login()
   $user_signon = wp_signon($info, false);
 
   if ( is_wp_error($user_signon) ) {
-    echo json_encode(array('loggedin' => false, 'message' => __('Wrong username or password.')));
+    echo json_encode(array(
+      'loggedin' => false,
+      'username' => 'Guest',
+      'message' => __('Wrong username or password.'),
+      'role' => ['title' => 'Guest', 'bitMask' => 7] #TODO: 判断是用户还是管理员
+      ));
   } else {
     echo json_encode([
       'username' => $user_signon->user_nicename,

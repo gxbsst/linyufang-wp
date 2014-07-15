@@ -96,11 +96,12 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
         }
       });
 
-      $httpProvider.interceptors.push(function ($q, $location) {
+      $httpProvider.interceptors.push(function ($q, $location, $window) {
         return {
           'responseError': function (response) {
             if (response.status === 401 || response.status === 403) {
-              $location.path('/tab/login');
+//              $window.location.reload();
+//              $location.path('/tab/login');
             }
             return $q.reject(response);
           }

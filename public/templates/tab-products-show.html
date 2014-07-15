@@ -13,7 +13,7 @@
     <label class="item item-radio" ng-repeat="plan in  metaPlans">
       <input type="radio" name="weight" ng-model="product.plan" ng-value="plan.value">
       <div class="item-content">
-        <span class="button  button-small icon-right button-calm" ng-bind="plan.name"></span>
+        <span class="button  button-small icon-right button-calm" ng-bind="plan.name + ' － ' + plan.value + '元'" ></span>
         <span ng-bind="plan.text"></span>
       </div>
       <i class="radio-icon ion-checkmark"></i>
