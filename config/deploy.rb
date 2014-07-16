@@ -24,8 +24,9 @@ namespace :deploy do
 		# run "mkdir -p #{shared_path}/site"
 		
 		# put File.read("public/wp-config.php"), "#{shared_path}/config/wp-config.php"
-		# put File.read("config/wordpress.php"), "#{shared_path}/config/wordpress.php"
+		put File.read("config/wordpress.php.example"), "#{shared_path}/config/wordpress.php"
 		put File.read("config/env/development.php.example"), "#{shared_path}/config/env/development.php"
+		put File.read("config/env/local.php.example"), "#{shared_path}/config/env/local.php"
 		put File.read("config/env/production.php.example"), "#{shared_path}/config/env/production.php"
 		puts "Now edit the config files in #{shared_path}."
 	end
