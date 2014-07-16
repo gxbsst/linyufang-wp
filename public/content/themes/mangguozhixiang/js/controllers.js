@@ -294,10 +294,10 @@ angular.module('starter.controllers', ['ngSanitize'])
     }
   })
 
-  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore, $window, $ionicPopup) {
+  .controller('LoginCtrl', function ($scope, $location, $rootScope, Auth, $cookieStore, $window, $ionicPopup, $state) {
 
     if (Auth.isLoggedIn())
-      $location.path('/')
+      $state.go('tab.account');
 
     $scope.username = '';
     $scope.password = '';
@@ -313,12 +313,14 @@ angular.module('starter.controllers', ['ngSanitize'])
               template: '用户名或者密码有误!'
             });
             alertPopup.then(function (res) {
-              $location.path('/tab/login')
+//              $state.go('tab.login');
             });
           }else{
-            $window.location.reload();
             $rootScope.currentUser = $cookieStore.get('user');
-            $location.path('/tab/products');
+            window.WP_API_Settings = res.nonce;
+            $state.go('tab.account');
+//            $location.path('/tab/products');
+//            window.location.reload();
           }
         },
         function (err) {

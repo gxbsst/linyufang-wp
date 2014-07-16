@@ -30,6 +30,17 @@ function mg_scripts()
   #wp_enqueue_script('rootController', get_template_directory_uri() . '/js/controllers/root_controller.js.coffee', '', '', true);
   #wp_enqueue_script('mainController', get_template_directory_uri() . '/js/controllers/main_controller.js.coffee', '', '', true);
 
+  # 主要为post gform表单使用
+  require_once(GFCommon::get_base_path() . "/form_display.php");
+  $form_id = 1;
+  $form_unique_id = RGFormsModel::get_form_unique_id($form_id);
+  $form = RGFormsModel::get_form_meta($form_id, true);
+  $form_state = GFFormDisplay::get_state($form, []);
+
+  $nonce = wp_create_nonce('wp_json');
+  wp_localize_script('inoic', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state));
+  wp_enqueue_script('inoic');
+
 //  require_once(GFCommon::get_base_path() . "/form_display.php");
 //  $form_unique_id = RGFormsModel::get_form_unique_id(1);
 //  $form = RGFormsModel::get_form_meta(1, true);
@@ -37,6 +48,7 @@ function mg_scripts()
 //  wp_localize_script('gform', 'GForm', array('form_unique_id' => $form_unique_id, 'form_state' => $form_state));
 //  wp_enqueue_script('gform');
 }
+
 
 function init_js_object() {
   # 主要为post gform表单使用
@@ -47,8 +59,9 @@ function init_js_object() {
   $form_state = GFFormDisplay::get_state($form, []);
 
   $nonce = wp_create_nonce('wp_json');
-  wp_localize_script('wp-api', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state));
-  wp_enqueue_script('wp-api');
+  return array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state);
+//  wp_localize_script('wp-api', 'WP_API_Settings', array('root' => esc_url_raw(get_json_url()), 'nonce' => $nonce, 'form_unique_id' => $form_unique_id, 'form_state' => $form_state));
+//  wp_enqueue_script('wp-api');
 }
 
 if ( !is_admin() )  add_action('wp_enqueue_scripts', 'init_js_object');
@@ -89,10 +102,12 @@ function ajax_login()
       'username' => $user_signon->user_nicename,
       'display_name' => $user_signon->display_name,
       'loggined' => true,
-      'role' => ['title' => 'user', 'bitMask' => 6] #TODO: 判断是用户还是管理员
+      'role' => ['title' => 'user', 'bitMask' => 6], #TODO: 判断是用户还是管理员
+      'nonce' => init_js_object()
     ]);
 //    echo json_encode(array('loggedin' => true, 'message' => __('Login successful, redirecting...')));
   }
+
 
   die();
 }
@@ -106,7 +121,6 @@ function ajax_registration()
   $nonce = getallheaders()['X-WP-Nonce'];
   if ( !wp_verify_nonce($nonce, 'wp_json') )
     exit('Sorry!');
-
 
   $username = $_POST['username'];
   $email = $_POST['email'];
@@ -143,6 +157,7 @@ add_action('wp_ajax_ajaxregistration', 'ajax_registration');
 function ajax_logout()
 {
   wp_logout();
+  init_js_object();
   status_header(200);
 }
 

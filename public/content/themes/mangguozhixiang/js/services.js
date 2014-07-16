@@ -109,7 +109,7 @@ angular.module('starter.services', ['ngResource'])
         if (user === undefined) {
           user = currentUser;
         }
-        return  user.loggedin === true //user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
+        return  user.loggined === true //user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
       },
       register: function (user, success, error) {
         $http.post('/site/wp-admin/admin-ajax.php?action=ajaxregistration', user).success(function (res) {

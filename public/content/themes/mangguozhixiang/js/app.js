@@ -96,12 +96,11 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
         }
       });
 
-      $httpProvider.interceptors.push(function ($q, $location, $window) {
+      $httpProvider.interceptors.push(function ($q, $location) {
         return {
           'responseError': function (response) {
             if (response.status === 401 || response.status === 403) {
-//              $window.location.reload();
-//              $location.path('/tab/login');
+              $location.path('/tab/login');
             }
             return $q.reject(response);
           }
@@ -265,6 +264,7 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
             }
           }
         })
+
 
       // if none of the above states are matched, use this as the fallback
       $urlRouterProvider.otherwise('/tab/products');

@@ -802,7 +802,7 @@ class WP_JSON_Posts {
 				if ( $previous_post ) {
 					setup_postdata( $previous_post );
 				}
-				return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
+				return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post1' ), array( 'status' => 403 ) );
 			}
 		} elseif ( 'view-revision' == $context ) {
 			if ( current_user_can( $post_type->cap->edit_post, $post['ID'] ) ) {
@@ -879,9 +879,9 @@ class WP_JSON_Posts {
 			return new WP_Error( 'json_post_invalid_id', __( 'Invalid post ID.' ), array( 'status' => 404 ) );
 		}
 
-		if ( ! $this->check_edit_permission( $post ) ) {
-			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
-		}
+//		if ( ! $this->check_edit_permission( $post ) ) {
+//			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post2' ), array( 'status' => 403 ) );
+//		}
 
 		global $wpdb;
 		$table = _get_meta_table( 'post' );
@@ -923,7 +923,7 @@ class WP_JSON_Posts {
 		}
 
 		if ( ! $this->check_edit_permission( $post ) ) {
-			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
+			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post3' ), array( 'status' => 403 ) );
 		}
 
 		$meta = get_metadata_by_mid( 'post', $mid );
@@ -1039,7 +1039,7 @@ class WP_JSON_Posts {
 		}
 
 		if ( ! $this->check_edit_permission( $post ) ) {
-			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
+			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post4' ), array( 'status' => 403 ) );
 		}
 
 		$current = get_metadata_by_mid( 'post', $mid );
@@ -1138,7 +1138,7 @@ class WP_JSON_Posts {
 		}
 
 		if ( ! $this->check_edit_permission( $post ) ) {
-			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
+			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post5' ), array( 'status' => 403 ) );
 		}
 
 		if ( ! array_key_exists( 'key', $data ) ) {
@@ -1203,7 +1203,7 @@ class WP_JSON_Posts {
 		}
 
 		if ( ! $this->check_edit_permission( $post ) ) {
-			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post' ), array( 'status' => 403 ) );
+			return new WP_Error( 'json_cannot_edit', __( 'Sorry, you cannot edit this post6' ), array( 'status' => 403 ) );
 		}
 
 		$current = get_metadata_by_mid( 'post', $mid );

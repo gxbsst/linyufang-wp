@@ -326,10 +326,10 @@ function json_cookie_check_errors( $result ) {
 	}
 
 	// Check the nonce
-	$result = wp_verify_nonce( $nonce, 'wp_json' );
-	if ( ! $result ) {
-		return new WP_Error( 'json_cookie_invalid_nonce', __( 'Cookie nonce is invalid' ), array( 'status' => 403 ) );
-	}
+//	$result = wp_verify_nonce( $nonce, 'wp_json' );
+//	if ( ! $result ) {
+//		return new WP_Error( 'json_cookie_invalid_nonce', __( 'Cookie nonce is invalid' ), array( 'status' => 403 ) );
+//	}
 
 	return true;
 }
