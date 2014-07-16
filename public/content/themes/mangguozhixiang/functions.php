@@ -1,5 +1,21 @@
 <?php
 
+if (!function_exists('getallheaders'))
+{
+  function getallheaders()
+  {
+    $headers = '';
+    foreach ($_SERVER as $name => $value)
+    {
+      if (substr($name, 0, 5) == 'HTTP_')
+      {
+        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+      }
+    }
+    return $headers;
+  }
+}
+
 function mg_styles()
 {
   wp_enqueue_style('ionic', get_template_directory_uri() . '/lib/ionic/css/ionic.css');
@@ -79,7 +95,7 @@ function ajax_login()
   // First check the nonce, if it fails the function will break
   //  check_ajax_referer( 'ajax-login-nonce', 'security' );
 
-  $nonce = getallheaders()['X-WP-Nonce'];
+  $nonce = getallheaders()['X-Wp-Nonce'];
   if ( !wp_verify_nonce($nonce, 'wp_json') )
     exit('Sorry!');
 

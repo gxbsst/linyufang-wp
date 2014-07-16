@@ -39,7 +39,7 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
 
       var access = routingConfig.accessLevels;
 
-      $httpProvider.defaults.headers.common['X-WP-Nonce'] = WP_API_Settings.nonce;
+      $httpProvider.defaults.headers.common['X-Wp-Nonce'] = WP_API_Settings.nonce;
       $httpProvider.defaults.headers.common['GFORM-State'] = WP_API_Settings.form_state;
       $httpProvider.defaults.headers.common['GFORM-Unique_Id'] = WP_API_Settings.form_unique_id;
 
