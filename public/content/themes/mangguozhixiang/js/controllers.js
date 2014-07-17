@@ -168,7 +168,7 @@ angular.module('starter.controllers', ['ngSanitize'])
     });
   })
 
-  .controller('PhotosCtrl', function ($scope, $ionicModal, Media, $ionicLoading) {
+  .controller('PhotosCtrl', function ($scope, $ionicModal, Media, $ionicLoading, $timeout, $stateParams) {
 
     $scope.photos2 = [];
 
@@ -201,6 +201,25 @@ angular.module('starter.controllers', ['ngSanitize'])
     $scope.closeModal = function () {
       $scope.modal.hide();
     };
+
+    var page = 1;
+
+    $scope.doRefresh = function(old_photos) {
+     var page = 2;
+      console.log('Refreshing!');
+      $timeout( function() {
+        Media.query({page: page}).$promise.then(function (photos) {
+            var new_photos = old_photos.concat(photos);
+            $scope.photos = new_photos;
+            while ($scope.photos.length) {
+              $scope.photos2.push($scope.photos.splice(0, 2))
+            }
+          });
+
+      }, 1000);
+
+    };
+
 
   })
 

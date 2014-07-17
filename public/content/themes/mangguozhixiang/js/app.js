@@ -291,5 +291,16 @@ var APP = angular.module('starter', ['ionic', 'starter.controllers', 'starter.se
       });
 
     }])
+
+    .directive('abc', function(){
+      return {
+        scope: {
+          a: "@"
+        },
+        link: function(scope, element, attrs){
+          console.log('-===', scope.a, '=====');
+        }
+      }
+    })
   ;
 

@@ -31,7 +31,7 @@ angular.module('starter.services', ['ngResource'])
     return $resource('/?json_route=/posts/:id/meta/:meta_id', {id: '@id', meta_id: '@meta_id'}, Actions);
   })
   .service('Media', function ($resource, Actions) {
-    return $resource('/?json_route=/media/:id', {id: '@id'}, Actions);
+    return $resource('/?json_route=/media&page=:page', {page: '@page'}, Actions);
   })
   .service('User', function ($resource, Actions) {
     return $resource('/?json_route=/users/:id', {id: '@id'}, Actions);
